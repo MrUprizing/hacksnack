@@ -25,6 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import SidebarTheme from "./sidebar-theme";
 
 export function NavUser({
   user,
@@ -98,6 +99,7 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <SidebarTheme />
               <DropdownMenuItem>
                 <BadgeCheck />
                 Account

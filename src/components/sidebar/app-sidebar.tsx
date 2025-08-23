@@ -1,7 +1,6 @@
 import { IconInnerShadowTop } from "@tabler/icons-react";
 import { Link } from "lucide-react";
 import { headers } from "next/headers";
-import type * as React from "react";
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {
@@ -15,31 +14,24 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
+import SearchSidebar from "./sidebar-search";
 
-export async function AppSidebar({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
+export async function AppSidebar() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   return (
-    <Sidebar collapsible="icon" variant="floating" {...props}>
+    <Sidebar collapsible="icon" variant="floating">
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
-              <Link href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          <SidebarMenuButton asChild>
+            <Link href="#">
+              <IconInnerShadowTop />
+            </Link>
+          </SidebarMenuButton>
         </SidebarMenu>
-        {/*<SearchSidebar />*/}
+        <SearchSidebar />
       </SidebarHeader>
       <SidebarContent>
         <NavMain />

@@ -1,48 +1,70 @@
 "use server";
 
 import { anthropic } from "@ai-sdk/anthropic";
-import { streamUI } from "@ai-sdk/rsc";
+import { getMutableAIState, streamUI } from "@ai-sdk/rsc";
+import type { ReactNode } from "react";
 import { z } from "zod";
 
-const LoadingComponent = () => (
-  <div className="animate-pulse p-4">getting weather...</div>
-);
-
-const getWeather = async (location: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  return "82°F️ ☀️";
+export type ServerMessage = {
+  role: "user" | "assistant";
+  content: string;
 };
 
-interface WeatherProps {
-  location: string;
-  weather: string;
-}
+export type ClientMessage = {
+  id: string;
+  role: "user" | "assistant";
+  display: ReactNode;
+};
 
-const WeatherComponent = (props: WeatherProps) => (
-  <div className="border border-neutral-200 p-4 rounded-lg max-w-fit">
-    The weather in {props.location} is {props.weather}
-  </div>
+const ShowNumberComponent = ({ number }: { number: number }) => (
+  <div className="border p-2 rounded bg-card text-xl text-center">{number}</div>
 );
 
-export async function streamComponent() {
+export async function streamChatMessage(input: string): Promise<ClientMessage> {
+  const history = getMutableAIState();
+
   const result = await streamUI({
-    model: anthropic("gpt-4o"),
-    prompt: "Get the weather for San Francisco",
-    text: ({ content }) => <div>{content}</div>,
+    model: anthropic("claude-3-haiku-20240307"),
+    messages: [...history.get(), { role: "user", content: input }],
+    system:
+      "Eres un asistente útil. Responde en español a lo que sea y si te dan un numeor usas la tool",
+    text: ({ content, done }) => {
+      if (done) {
+        history.done((messages: ServerMessage[]) => [
+          ...messages,
+          { role: "assistant", content },
+        ]);
+      }
+      return (
+        <div className="bg-green-100 text-green-900 p-3 rounded-lg">
+          {content}
+        </div>
+      );
+    },
     tools: {
-      getWeather: {
-        description: "Get the weather for a location",
-        inputSchema: z.object({
-          location: z.string(),
-        }),
-        generate: async function* ({ location }) {
-          yield <LoadingComponent />;
-          const weather = await getWeather(location);
-          return <WeatherComponent weather={weather} location={location} />;
-        },
+      showNumber: {
+        description: "Muestra un número en pantalla dentro de un div grande",
+        inputSchema: z.object({ number: z.number() }),
+        generate: async ({ number }) => <ShowNumberComponent number={number} />,
+      },
+      showLetters: {
+        description: "Muestra una letra que da el usuario",
+        inputSchema: z.object({ letter: z.string() }),
+        generate: async ({ letter }) => (
+          <div>
+            hola
+            <div className="border p-2 rounded bg-white text-black text-xl text-center">
+              {letter}
+            </div>
+          </div>
+        ),
       },
     },
   });
 
-  return result.value;
+  return {
+    id: Date.now().toString() + "-ai",
+    role: "assistant",
+    display: result.value,
+  };
 }
