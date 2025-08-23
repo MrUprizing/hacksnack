@@ -1,0 +1,9 @@
+import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
+export * from "./auth-schema";
+
+export const NothingTable = pgTable("nothing", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 255 }).notNull(),
+  age: integer().notNull(),
+  email: varchar({ length: 255 }).notNull().unique(),
+});
