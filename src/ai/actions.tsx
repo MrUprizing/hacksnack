@@ -5,6 +5,9 @@ import { getMutableAIState, streamUI } from "@ai-sdk/rsc";
 import type { ReactNode } from "react";
 import { z } from "zod";
 import { FoodComparison } from "@/components/chat-blocks/food-comparison";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { moreToolsGenerate } from "./more-tools";
 
 export type ServerMessage = {
   role: "user" | "assistant";
@@ -22,6 +25,9 @@ const ShowNumberComponent = ({ number }: { number: number }) => (
 );
 
 export async function streamChatMessage(input: string): Promise<ClientMessage> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   const history = getMutableAIState();
 
   const result = await streamUI({
@@ -48,6 +54,23 @@ export async function streamChatMessage(input: string): Promise<ClientMessage> {
         inputSchema: z.object({ number: z.number() }),
         generate: async ({ number }) => <ShowNumberComponent number={number} />,
       },
+      moreTools: {
+        description:
+          "Additional tools you have, send a mesaje with the task " +
+          "Tools like: Get wather ",
+        inputSchema: z.object({ task: z.string() }),
+        generate: async ({ task }) => {
+          const user = session?.user ? session.user.email : "unknown user";
+          const result = await moreToolsGenerate(task);
+          return (
+            <div className="border p-2 rounded bg-white text-black text-xl text-center">
+              Hola {user}! Tarea recibida: {task}
+              <div>{result.text}</div>
+            </div>
+          );
+        },
+      },
+
       foodComparision: {
         description: "If the user gives you two foods, compare them",
         inputSchema: z.object({

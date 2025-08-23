@@ -4,7 +4,6 @@ import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
 
-//Pending improvements
 export default async function AppLayout({
   children,
 }: {

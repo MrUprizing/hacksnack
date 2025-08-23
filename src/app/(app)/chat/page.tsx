@@ -6,12 +6,13 @@ import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AI } from "@/app/ai";
 
 export default function Page() {
   const [input, setInput] = useState("");
   const [conversation, setConversation] = useUIState();
-  // biome-ignore lint/suspicious/noExplicitAny: <Ai sdk>
-  const { streamChatMessage } = useActions() as any;
+
+  const { streamChatMessage } = useActions(typeof AI);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   // useEffect(() => {
