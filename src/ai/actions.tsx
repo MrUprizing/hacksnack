@@ -1,5 +1,6 @@
 "use server";
 
+import { FoodComparison } from "@/components/chat-blocks/food-comparison";
 import { anthropic } from "@ai-sdk/anthropic";
 import { getMutableAIState, streamUI } from "@ai-sdk/rsc";
 import type { ReactNode } from "react";
@@ -46,6 +47,28 @@ export async function streamChatMessage(input: string): Promise<ClientMessage> {
         description: "Muestra un número en pantalla dentro de un div grande",
         inputSchema: z.object({ number: z.number() }),
         generate: async ({ number }) => <ShowNumberComponent number={number} />,
+      },
+      foodComparision: {
+        description: "If the user gives you two foods, compare them",
+        inputSchema: z.object({
+          food1: z.object({
+            name: z.string(),
+            emoji: z.string(),
+            calories: z.number(),
+            pros: z.string(),
+            cons: z.string(),
+          }),
+          food2: z.object({
+            name: z.string(),
+            emoji: z.string(),
+            calories: z.number(),
+            pros: z.string(),
+            cons: z.string(),
+          }),
+        }),
+        generate: async ({ food1, food2 }) => (
+          <FoodComparison food1={food1} food2={food2} />
+        ),
       },
       showLetters: {
         description: "Muestra una letra que da el usuario",
