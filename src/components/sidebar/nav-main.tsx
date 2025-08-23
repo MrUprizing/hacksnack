@@ -3,7 +3,6 @@
 import {
   BarChart2,
   History,
-  LayoutDashboard,
   MessageCircle,
   Sparkles,
   Target,
@@ -11,6 +10,23 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRef } from "react";
+import {
+  LayoutPanelTopIcon,
+  type LayoutPanelTopIconHandle,
+} from "@/components/sidebar/icons/icon-dashboard";
+import {
+  HistoryIcon,
+  type HistoryIconHandle,
+} from "@/components/sidebar/icons/icon-history";
+import {
+  MessageCircleIcon,
+  type MessageCircleIconHandle,
+} from "@/components/sidebar/icons/icon-chat";
+import {
+  ChartSplineIcon,
+  type ChartSplineIconHandle,
+} from "@/components/sidebar/icons/icon-analytics";
 import {
   SidebarGroup,
   SidebarMenu,
@@ -19,61 +35,118 @@ import {
 } from "@/components/ui/sidebar";
 
 export function NavMain() {
-  const items = [
-    {
-      title: "Dasboard",
-      url: "/dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      title: "Chat",
-      url: "/chat",
-      icon: MessageCircle,
-    },
-    {
-      title: "History",
-      url: "/history",
-      icon: History,
-    },
-    {
-      title: "Analytics",
-      url: "/analytics",
-      icon: BarChart2,
-    },
-    {
-      title: "Goals",
-      url: "/goals",
-      icon: Target,
-    },
-    {
-      title: "Insights",
-      url: "/insights",
-      icon: Sparkles,
-    },
-
-    {
-      title: "Profile",
-      url: "/profile",
-      icon: User,
-    },
-  ];
   const pathname = usePathname();
+  const dashboardIconRef = useRef<LayoutPanelTopIconHandle>(null);
+  const historyIconRef = useRef<HistoryIconHandle>(null);
+  const messageIconRef = useRef<MessageCircleIconHandle>(null);
+  const analyticsIconRef = useRef<ChartSplineIconHandle>(null);
+
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {items.map((item) => (
-          <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton asChild tooltip={item.title}>
-              <Link
-                href={item.url}
-                className={`flex items-center gap-2 link${pathname === item.url ? " bg-sidebar-accent" : ""}`}
-              >
-                <item.icon className="w-4 h-4" />
-                <span>{item.title}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip="Dashboard">
+            <Link
+              href="/dashboard"
+              className={`flex items-center gap-2 link${pathname === "/dashboard" ? " bg-sidebar-accent" : ""}`}
+              onMouseEnter={() => dashboardIconRef.current?.startAnimation()}
+              onMouseLeave={() => dashboardIconRef.current?.stopAnimation()}
+            >
+              <LayoutPanelTopIcon
+                ref={dashboardIconRef}
+                size={16}
+                className="w-4 h-4"
+              />
+              <span>Dashboard</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip="Chat">
+            <Link
+              href="/chat"
+              className={`flex items-center gap-2 link${pathname === "/chat" ? " bg-sidebar-accent" : ""}`}
+              onMouseEnter={() => messageIconRef.current?.startAnimation()}
+              onMouseLeave={() => messageIconRef.current?.stopAnimation()}
+            >
+              <MessageCircleIcon
+                ref={messageIconRef}
+                size={16}
+                className="w-4 h-4"
+              />
+              <span>Chat</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip="History">
+            <Link
+              href="/history"
+              className={`flex items-center gap-2 link${pathname === "/history" ? " bg-sidebar-accent" : ""}`}
+              onMouseEnter={() => historyIconRef.current?.startAnimation()}
+              onMouseLeave={() => historyIconRef.current?.stopAnimation()}
+            >
+              <HistoryIcon ref={historyIconRef} size={16} className="w-4 h-4" />
+              <span>History</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip="Analytics">
+            <Link
+              href="/analytics"
+              className={`flex items-center gap-2 link${pathname === "/analytics" ? " bg-sidebar-accent" : ""}`}
+              onMouseEnter={() => analyticsIconRef.current?.startAnimation()}
+              onMouseLeave={() => analyticsIconRef.current?.stopAnimation()}
+            >
+              <ChartSplineIcon
+                ref={analyticsIconRef}
+                size={16}
+                className="w-4 h-4"
+              />
+              <span>Analytics</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip="Goals">
+            <Link
+              href="/goals"
+              className={`flex items-center gap-2 link${pathname === "/goals" ? " bg-sidebar-accent" : ""}`}
+            >
+              <Target className="w-4 h-4" />
+              <span>Goals</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip="Insights">
+            <Link
+              href="/insights"
+              className={`flex items-center gap-2 link${pathname === "/insights" ? " bg-sidebar-accent" : ""}`}
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Insights</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip="Profile">
+            <Link
+              href="/profile"
+              className={`flex items-center gap-2 link${pathname === "/profile" ? " bg-sidebar-accent" : ""}`}
+            >
+              <User className="w-4 h-4" />
+              <span>Profile</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   );

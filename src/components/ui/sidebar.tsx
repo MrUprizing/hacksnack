@@ -23,6 +23,11 @@ import {
 } from "@/components/ui/tooltip";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import {
+  PanelLeftCloseIcon,
+  type PanelLeftCloseIconHandle,
+} from "@/components/sidebar/icons/icon-toggle";
+import { useRef } from "react";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -258,6 +263,7 @@ function SidebarTrigger({
   ...props
 }: React.ComponentProps<typeof Button>) {
   const { toggleSidebar } = useSidebar();
+  const icontoggleRef = useRef<PanelLeftCloseIconHandle>(null);
 
   return (
     <Button
@@ -270,9 +276,11 @@ function SidebarTrigger({
         onClick?.(event);
         toggleSidebar();
       }}
+      onMouseEnter={() => icontoggleRef.current?.startAnimation()}
+      onMouseLeave={() => icontoggleRef.current?.stopAnimation()}
       {...props}
     >
-      <PanelLeftIcon />
+      <PanelLeftCloseIcon size={16} ref={icontoggleRef} />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

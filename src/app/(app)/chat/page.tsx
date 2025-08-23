@@ -10,24 +10,17 @@ import { Input } from "@/components/ui/input";
 export default function Page() {
   const [input, setInput] = useState("");
   const [conversation, setConversation] = useUIState();
+  // biome-ignore lint/suspicious/noExplicitAny: <Ai sdk>
   const { streamChatMessage } = useActions() as any;
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  // useEffect(() => {
+  //   endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-full ">
       {/* Header */}
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
-        <div className="container flex h-14 items-center">
-          <div className="flex items-center space-x-2">
-            <Bot className="h-6 w-6 text-primary" />
-            <h1 className="text-lg font-semibold">Nutrition AI Assistant</h1>
-          </div>
-        </div>
-      </div>
 
       {/* Messages Container */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -102,7 +95,7 @@ export default function Page() {
       </div>
 
       {/* Input Form */}
-      <div className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4">
+      <div className="border-t backdrop-blur p-4">
         <form
           onSubmit={async (e) => {
             e.preventDefault();
