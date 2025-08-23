@@ -10,7 +10,6 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
@@ -37,7 +36,7 @@ export async function AppSidebar() {
         <NavMain />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={session.user} />
+        <NavUser user={session?.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

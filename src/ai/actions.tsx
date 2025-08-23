@@ -1,10 +1,10 @@
 "use server";
 
-import { FoodComparison } from "@/components/chat-blocks/food-comparison";
 import { anthropic } from "@ai-sdk/anthropic";
 import { getMutableAIState, streamUI } from "@ai-sdk/rsc";
 import type { ReactNode } from "react";
 import { z } from "zod";
+import { FoodComparison } from "@/components/chat-blocks/food-comparison";
 
 export type ServerMessage = {
   role: "user" | "assistant";
@@ -86,7 +86,7 @@ export async function streamChatMessage(input: string): Promise<ClientMessage> {
   });
 
   return {
-    id: Date.now().toString() + "-ai",
+    id: `${Date.now().toString()}-ai`,
     role: "assistant",
     display: result.value,
   };

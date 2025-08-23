@@ -3,7 +3,6 @@
 import { useActions, useUIState } from "@ai-sdk/rsc";
 import { Bot, Send, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { AI } from "@/app/ai";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,12 +10,12 @@ import { Input } from "@/components/ui/input";
 export default function Page() {
   const [input, setInput] = useState("");
   const [conversation, setConversation] = useUIState();
-  const { streamChatMessage } = useActions<typeof AI>();
+  const { streamChatMessage } = useActions() as any;
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [conversation]);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -112,7 +111,7 @@ export default function Page() {
             setConversation((current: any[]) => [
               ...current,
               {
-                id: Date.now().toString() + "-user",
+                id: `${Date.now().toString()}-user`,
                 role: "user",
                 display: input,
               },

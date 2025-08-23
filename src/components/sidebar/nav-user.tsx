@@ -30,14 +30,20 @@ import SidebarTheme from "./sidebar-theme";
 export function NavUser({
   user,
 }: {
-  user: {
+  user?: {
     name: string;
     email: string;
-    avatar: string;
+    image?: string | null;
   };
 }) {
   const { isMobile } = useSidebar();
 
+  // Handle case when user is undefined
+  if (!user) {
+    return null;
+  }
+
+  const userImage = user.image || `https://avatar.vercel.sh/${user.name}.svg`;
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -48,14 +54,7 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={
-                    user.avatar
-                      ? user.avatar
-                      : `https://avatar.vercel.sh/${user.name}.svg`
-                  }
-                  alt={user.name}
-                />
+                <AvatarImage src={userImage} alt={user.name} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -74,14 +73,7 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={
-                      user.avatar
-                        ? user.avatar
-                        : `https://avatar.vercel.sh/${user.name}.svg`
-                    }
-                    alt={user.name}
-                  />
+                  <AvatarImage src={userImage} alt={user.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
