@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   const result = streamText({
     model: anthropic("claude-3-haiku-20240307"),
     system:
-      "Responde en markdown los text Eres un asistente especializado en nutrición y alimentación saludable. Puedes comparar alimentos, proporcionar información nutricional y ayudar con decisiones alimentarias. Cuando compares alimentos, asegúrate de proporcionar información precisa sobre calorías, pros y contras nutricionales. ",
+      "Eres un asistente especializado en nutrición y alimentación saludable. ",
     messages: convertToModelMessages(messages),
     stopWhen: stepCountIs(5),
     tools,

@@ -8,6 +8,7 @@ import { Weather } from "@/components/tools/weather";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { DailyProgressBar } from "@/components/tools/daily-progress";
 import { Markdown } from "@/components/ui/markdown";
 import { cn } from "@/lib/utils";
 
@@ -164,6 +165,54 @@ export default function Page() {
                       );
                     default:
                       return null;
+                  }
+                }
+                if (part.type === "tool-dailyProgress") {
+                  if (part.state === "output-available") {
+                    const { goal, total } = part.output as any;
+                    return (
+                      <Card
+                        key={`${message.id}-progress-${index}`}
+                        className="p-3 bg-muted w-fit"
+                      >
+                        <DailyProgressBar
+                          calories={total.calories}
+                          caloriesGoal={goal.caloriesGoal}
+                          protein={total.protein}
+                          proteinGoal={goal.proteinGoal}
+                          onAddFood={() => {
+                            // Aquí puedes abrir un modal o navegar a la pantalla de agregar comida
+                          }}
+                        />
+                      </Card>
+                    );
+                  }
+                  if (part.state === "input-available") {
+                    return (
+                      <Card
+                        key={`${message.id}-progress-loading-${index}`}
+                        className="p-3 bg-muted w-fit"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                          <span className="text-sm">
+                            Cargando progreso diario...
+                          </span>
+                        </div>
+                      </Card>
+                    );
+                  }
+                  if (part.state === "output-error") {
+                    return (
+                      <Card
+                        key={`${message.id}-progress-error-${index}`}
+                        className="p-3 bg-destructive/10 border-destructive w-fit"
+                      >
+                        <p className="text-destructive text-sm">
+                          Error: {part.errorText}
+                        </p>
+                      </Card>
+                    );
                   }
                 }
 
