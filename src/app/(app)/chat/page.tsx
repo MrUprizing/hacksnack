@@ -1,139 +1,202 @@
 "use client";
 
-import { useActions, useUIState } from "@ai-sdk/rsc";
+import { useChat } from "@ai-sdk/react";
 import { Bot, Send, User } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react";
+import { FoodComparison } from "@/components/chat-blocks/food-comparison";
+import { Weather } from "@/components/tools/weather";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { AI } from "@/app/ai";
+import { Markdown } from "@/components/ui/markdown";
+import { cn } from "@/lib/utils";
 
 export default function Page() {
   const [input, setInput] = useState("");
-  const [conversation, setConversation] = useUIState();
+  const { messages, sendMessage } = useChat();
 
-  const { streamChatMessage } = useActions(typeof AI);
-  const endOfMessagesRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, []);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    sendMessage({ text: input });
+    setInput("");
+  };
 
   return (
-    <div className="flex flex-col h-full ">
+    <div className="p-6 space-y-6">
       {/* Header */}
-
-      {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {conversation.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-4">
-              <Bot className="h-16 w-16 text-muted-foreground" />
-              <div className="space-y-2">
-                <h2 className="text-2xl font-semibold text-foreground">
-                  ¡Hola! Soy tu asistente de nutrición
-                </h2>
-                <p className="text-muted-foreground max-w-md">
-                  Puedo ayudarte a registrar tus alimentos, analizar tu dieta y
-                  darte consejos nutricionales personalizados.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {conversation.map((message: any) => (
-            <div
-              key={message.id}
-              className={`flex items-start gap-3 ${
-                message.role === "user" ? "flex-row-reverse" : "flex-row"
-              }`}
-            >
-              {/* Avatar */}
-              <Avatar className="h-8 w-8 border">
-                {message.role === "user" ? (
-                  <>
-                    <AvatarImage src="/user-avatar.png" alt="Usuario" />
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      <User className="h-4 w-4" />
-                    </AvatarFallback>
-                  </>
-                ) : (
-                  <>
-                    <AvatarImage src="/ai-avatar.png" alt="AI Assistant" />
-                    <AvatarFallback className="bg-secondary text-secondary-foreground">
-                      <Bot className="h-4 w-4" />
-                    </AvatarFallback>
-                  </>
-                )}
-              </Avatar>
-
-              {/* Message Content */}
-              <div
-                className={`flex flex-col max-w-[80%] ${
-                  message.role === "user" ? "items-end" : "items-start"
-                }`}
-              >
-                <div
-                  className={`rounded-lg ${
-                    message.role === "user"
-                      ? "bg-primary text-primary-foreground px-4 py-2"
-                      : "bg-muted"
-                  }`}
-                >
-                  {message.role === "user" ? (
-                    <p className="whitespace-pre-wrap text-sm">
-                      {message.display}
-                    </p>
-                  ) : (
-                    <div className="text-sm">{message.display}</div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-          <div ref={endOfMessagesRef} />
-        </div>
+      <div>
+        <h1 className="text-2xl font-semibold">Nutrition AI Chat</h1>
+        <p className="text-muted-foreground text-sm">
+          Pregunta sobre tus alimentos y nutrición
+        </p>
       </div>
 
-      {/* Input Form */}
-      <div className="border-t backdrop-blur p-4">
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (!input.trim()) return;
-
-            setConversation((current: any[]) => [
-              ...current,
-              {
-                id: `${Date.now().toString()}-user`,
-                role: "user",
-                display: input,
-              },
-            ]);
-
-            const message = await streamChatMessage(input);
-            setConversation((current: any[]) => [...current, message]);
-            setInput("");
-          }}
-          className="max-w-4xl mx-auto flex items-center gap-2"
-        >
-          <div className="flex-1 relative">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Cuéntame qué comiste hoy o pregúntame sobre nutrición..."
-              className="pr-12 min-h-[44px] resize-none"
-              aria-label="Campo de texto para enviar un mensaje"
-            />
+      {/* Messages Area */}
+      <div className="space-y-4">
+        {messages.length === 0 && (
+          <div className="text-center text-muted-foreground py-8">
+            <Bot className="mx-auto h-12 w-12 mb-4 opacity-50" />
+            <p>¡Hola! Soy tu asistente de nutrición AI.</p>
+            <p className="text-sm">
+              Pregúntame sobre alimentos, recetas o nutrición.
+            </p>
           </div>
-          <Button
-            type="submit"
-            size="icon"
-            className="h-[44px] w-[44px]"
-            disabled={!input.trim()}
+        )}
+
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={cn(
+              "flex gap-3",
+              message.role === "user" ? "justify-end" : "justify-start",
+            )}
           >
-            <Send className="h-4 w-4" />
-            <span className="sr-only">Enviar mensaje</span>
+            {message.role === "assistant" && (
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-primary-foreground" />
+                </div>
+              </div>
+            )}
+
+            <div
+              className={cn(
+                "space-y-2",
+                message.role === "user" ? "max-w-[50%]" : "max-w-full flex-1",
+              )}
+            >
+              {message.parts.map((part, index) => {
+                if (part.type === "text") {
+                  return (
+                    <Card
+                      key={`${message.id}-text-${index}`}
+                      className={cn(
+                        "p-3 text-sm w-fit",
+                        message.role === "user"
+                          ? "bg-primary text-primary-foreground ml-auto"
+                          : "bg-card max-w-[70%]",
+                      )}
+                    >
+                      <Markdown className="prose prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs">
+                        {part.text}
+                      </Markdown>
+                    </Card>
+                  );
+                }
+
+                if (part.type === "tool-displayWeather") {
+                  switch (part.state) {
+                    case "input-available":
+                      return (
+                        <Card
+                          key={`${message.id}-weather-loading-${index}`}
+                          className="p-3 bg-muted w-fit"
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                            <span className="text-sm">
+                              Cargando información del clima...
+                            </span>
+                          </div>
+                        </Card>
+                      );
+                    case "output-available":
+                      return (
+                        <Card
+                          key={`${message.id}-weather-${index}`}
+                          className="p-3 bg-muted w-fit"
+                        >
+                          <Weather {...(part.output as any)} />
+                        </Card>
+                      );
+                    case "output-error":
+                      return (
+                        <Card
+                          key={`${message.id}-weather-error-${index}`}
+                          className="p-3 bg-destructive/10 border-destructive w-fit"
+                        >
+                          <p className="text-destructive text-sm">
+                            Error: {part.errorText}
+                          </p>
+                        </Card>
+                      );
+                    default:
+                      return null;
+                  }
+                }
+
+                if (part.type === "tool-compareFoods") {
+                  switch (part.state) {
+                    case "input-available":
+                      return (
+                        <Card
+                          key={`${message.id}-food-loading-${index}`}
+                          className="p-3 bg-muted w-fit"
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                            <span className="text-sm">
+                              Comparando alimentos...
+                            </span>
+                          </div>
+                        </Card>
+                      );
+                    case "output-available":
+                      return (
+                        <div
+                          key={`${message.id}-food-${index}`}
+                          className="w-full"
+                        >
+                          <FoodComparison {...(part.output as any)} />
+                        </div>
+                      );
+                    case "output-error":
+                      return (
+                        <Card
+                          key={`${message.id}-food-error-${index}`}
+                          className="p-3 bg-destructive/10 border-destructive w-fit"
+                        >
+                          <p className="text-destructive text-sm">
+                            Error: {part.errorText}
+                          </p>
+                        </Card>
+                      );
+                    default:
+                      return null;
+                  }
+                }
+
+                return null;
+              })}
+            </div>
+
+            {message.role === "user" && (
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                  <User className="w-4 h-4 text-muted-foreground" />
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Input Area */}
+      <div className="bottom-0">
+        <form
+          onSubmit={handleSubmit}
+          className="flex gap-2 max-w-4xl mx-auto pb-6"
+        >
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Escribe tu pregunta sobre nutrición..."
+            className="flex-1"
+            autoFocus
+          />
+          <Button type="submit" size="icon" disabled={!input.trim()}>
+            <Send className="w-4 h-4" />
           </Button>
         </form>
       </div>
