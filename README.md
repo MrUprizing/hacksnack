@@ -5,6 +5,34 @@ Hackathon Nutrition AI es una aplicación web que permite a los usuarios llevar 
 ## 🚀 Objetivo
 
 El objetivo principal es ayudar a los usuarios a registrar y visualizar su ingesta diaria de alimentos, obtener análisis nutricionales automáticos y recomendaciones personalizadas, todo potenciado por inteligencia artificial.
+## ¿Qué puedes pedirle a Nutrition AI? 🚀
+
+- **Registrar comidas:**  
+  “Comí 2 huevos y una manzana en el desayuno.”
+
+- **Registrar comida con foto:**  
+  “Subí esta foto, ¿qué comí?” (adjunta una imagen de tu plato)
+
+- **Ver tu progreso diario:**  
+  “¿Cuántas calorías llevo hoy?”  
+  “¿Cuánto me falta de proteína?”
+
+- **Comparar alimentos:**  
+  “¿Qué es mejor, arroz o quinoa?”
+
+- **Sugerencias inteligentes:**  
+  “Sugiere snacks altos en proteína.”
+
+- **Ver o editar tu objetivo:**  
+  “¿Cuál es mi meta de calorías?”  
+  “Cambia mi objetivo a perder peso.”
+
+- **Ver historial:**  
+  “Muéstrame todo lo que he comido esta semana.”
+  
+- **Pidele que lo genere con una interfaz bonita:**
+  "Dame lo que he comido pero con un fondo verde y bonito"
+
 
 ## 🛠️ Stack Tecnológico
 
