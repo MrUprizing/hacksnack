@@ -155,8 +155,7 @@ const WeightCard = ({ weight }: { weight?: number }) => (
 );
 
 export default function UserInfo() {
-  const { data: session, error } = authClient.useSession();
-  if (error) return <div>Error: {error.message}</div>;
+  const { data: session } = authClient.useSession();
 
   return (
     <section className="space-y-6 p-4 md:p-8 lg:p-12">
