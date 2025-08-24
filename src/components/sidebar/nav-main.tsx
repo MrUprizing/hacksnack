@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  BarChart2,
-  History,
-  MessageCircle,
-  Sparkles,
-  Target,
-  User,
-} from "lucide-react";
+import { Sparkles, Target } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef } from "react";
