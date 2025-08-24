@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { DailyProgressBar } from "@/components/tools/daily-progress";
 import { Markdown } from "@/components/ui/markdown";
 import { cn } from "@/lib/utils";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 
 export default function Page() {
   const [input, setInput] = useState("");
@@ -26,27 +27,24 @@ export default function Page() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="relative min-h-screen flex flex-col">
+      {/* Fondo con efecto */}
+      <div className="absolute inset-0 z-20">
+        <div className="w-full h-full">
+          <TextHoverEffect text="CHAT" />
+        </div>
+      </div>
+
       {/* Header */}
-      <div>
+      <div className="p-6 pb-2 z-20">
         <h1 className="text-2xl font-semibold">Nutrition AI Chat</h1>
         <p className="text-muted-foreground text-sm">
           Pregunta sobre tus alimentos y nutrición
         </p>
       </div>
 
-      {/* Messages Area */}
-      <div className="space-y-4">
-        {messages.length === 0 && (
-          <div className="text-center text-muted-foreground py-8">
-            <Bot className="mx-auto h-12 w-12 mb-4 opacity-50" />
-            <p>¡Hola! Soy tu asistente de nutrición AI.</p>
-            <p className="text-sm">
-              Pregúntame sobre alimentos, recetas o nutrición.
-            </p>
-          </div>
-        )}
-
+      {/* Área de mensajes con scroll */}
+      <div className="flex-1 overflow-y-auto px-6 space-y-4 ">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -56,7 +54,7 @@ export default function Page() {
             )}
           >
             {message.role === "assistant" && (
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 ">
                 <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
                   <Bot className="w-4 h-4 text-primary-foreground" />
                 </div>
@@ -75,13 +73,13 @@ export default function Page() {
                     <Card
                       key={`${message.id}-text-${index}`}
                       className={cn(
-                        "p-3 text-sm w-fit",
+                        "p-3 text-sm w-fit z-20",
                         message.role === "user"
                           ? "bg-primary text-primary-foreground ml-auto"
                           : "bg-card max-w-[70%]",
                       )}
                     >
-                      <Markdown className="prose prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs">
+                      <Markdown className="prose z-20 prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs">
                         {part.text}
                       </Markdown>
                     </Card>
@@ -278,7 +276,7 @@ export default function Page() {
       </div>
 
       {/* Input Area */}
-      <div className="bottom-0">
+      <div className="bottom-0 mt-10 z-20">
         <form
           onSubmit={handleSubmit}
           className="flex gap-2 max-w-4xl mx-auto pb-6"
