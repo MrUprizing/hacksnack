@@ -5,6 +5,7 @@ import Prism from "@/components/landing/bg-prism";
 import { AnimatedGroup } from "@/components/ui/animated-group";
 import { Button } from "@/components/ui/button";
 import { TextEffect } from "@/components/ui/text-effect";
+import { HeroHeader } from "@/components/landing/header";
 
 const transitionVariants = {
   item: {
@@ -29,7 +30,7 @@ const transitionVariants = {
 export default function HeroSection() {
   return (
     <>
-      {/*<HeroHeader />*/}
+      <HeroHeader />
       <div className="absolute inset-0 -z-10">
         <Prism
           animationType="rotate"
