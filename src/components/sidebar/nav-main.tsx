@@ -25,6 +25,10 @@ import {
   type UserIconHandle,
 } from "@/components/sidebar/icons/icon-profile";
 import {
+  RouteIcon,
+  type RouteIconHandle,
+} from "@/components/sidebar/icons/icon-goals";
+import {
   SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
@@ -38,6 +42,7 @@ export function NavMain() {
   const messageIconRef = useRef<MessageCircleIconHandle>(null);
   const analyticsIconRef = useRef<ChartSplineIconHandle>(null);
   const profileIconRef = useRef<UserIconHandle>(null);
+  const goalsIconRef = useRef<RouteIconHandle>(null);
 
   return (
     <SidebarGroup>
@@ -115,8 +120,10 @@ export function NavMain() {
             <Link
               href="/goals"
               className={`flex items-center gap-2 link${pathname === "/goals" ? " bg-sidebar-accent" : ""}`}
+              onMouseEnter={() => goalsIconRef.current?.startAnimation()}
+              onMouseLeave={() => goalsIconRef.current?.stopAnimation()}
             >
-              <Target className="w-4 h-4" />
+              <RouteIcon ref={goalsIconRef} size={16} className="w-4 h-4" />
               <span>Goals</span>
             </Link>
           </SidebarMenuButton>

@@ -1,5 +1,4 @@
 import { IconInnerShadowTop } from "@tabler/icons-react";
-import { Link } from "lucide-react";
 import { headers } from "next/headers";
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavUser } from "@/components/sidebar/nav-user";
@@ -10,6 +9,7 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
@@ -24,11 +24,17 @@ export async function AppSidebar() {
     <Sidebar collapsible="icon" variant="floating">
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuButton asChild>
-            <Link href="#">
-              <IconInnerShadowTop />
-            </Link>
-          </SidebarMenuButton>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="data-[slot=sidebar-menu-button]:!p-1.5"
+            >
+              <a href="#">
+                <IconInnerShadowTop className="!size-5" />
+                <span className="text-base font-semibold">HackSnack</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
         <SearchSidebar />
       </SidebarHeader>
