@@ -1,9 +1,9 @@
 import { tool as createTool } from "ai";
-import { getDailyProgress } from "@/db/queries/daily-progress";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { addFoodEntry } from "@/db/mutations/food-entry";
 import { createGoal, updateGoal } from "@/db/mutations/goals";
+import { getDailyProgress } from "@/db/queries/daily-progress";
 import { getGoalByUserId } from "@/db/queries/goals";
 import { auth } from "@/lib/auth";
 
@@ -130,7 +130,6 @@ export const createGoalTool = createTool({
   },
 });
 
-// Tool para editar una goal
 export const editGoalTool = createTool({
   description: "Edit the nutrition goal for the current user",
   inputSchema: z.object({
@@ -215,6 +214,31 @@ export const dailyProgressTool = createTool({
   },
 });
 
+export const smartSuggestionsTool = createTool({
+  description:
+    "Show a carousel of 3 smart food suggestions with protein grams, you must provide the suggestions",
+  inputSchema: z.object({
+    suggestions: z
+      .array(
+        z.object({
+          name: z.string().describe("Food name"),
+          emoji: z.string().describe("Emoji for the food"),
+          protein: z.number().describe("Protein in grams"),
+        }),
+      )
+      .length(3)
+      .describe("Array of 3 food suggestions"),
+    context: z
+      .string()
+      .optional()
+      .describe("Context or reason for the suggestion"),
+  }),
+  execute: async ({ suggestions, context }) => {
+    // Solo retorna los datos, la IA ya los calculó
+    return { suggestions, context };
+  },
+});
+
 export const tools = {
   displayWeather: weatherTool,
   compareFoods: foodComparisonTool,
@@ -223,4 +247,5 @@ export const tools = {
   editGoal: editGoalTool,
   viewGoal: viewGoalTool,
   dailyProgress: dailyProgressTool,
+  smartSuggestions: smartSuggestionsTool,
 };

@@ -1,6 +1,8 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
+import { SmartSuggestionsCarousel } from "@/components/tools/smart-suggestions-carousel";
+
 import { Bot, Send, User } from "lucide-react";
 import { useState } from "react";
 import { FoodComparison } from "@/components/chat-blocks/food-comparison";
@@ -206,6 +208,50 @@ export default function Page() {
                     return (
                       <Card
                         key={`${message.id}-progress-error-${index}`}
+                        className="p-3 bg-destructive/10 border-destructive w-fit"
+                      >
+                        <p className="text-destructive text-sm">
+                          Error: {part.errorText}
+                        </p>
+                      </Card>
+                    );
+                  }
+                }
+
+                if (part.type === "tool-smartSuggestions") {
+                  if (part.state === "output-available") {
+                    const { suggestions, context } = part.output as any;
+                    return (
+                      <Card
+                        key={`${message.id}-suggestions-${index}`}
+                        className="p-3 bg-muted w-fit"
+                      >
+                        <SmartSuggestionsCarousel
+                          suggestions={suggestions}
+                          context={context}
+                        />
+                      </Card>
+                    );
+                  }
+                  if (part.state === "input-available") {
+                    return (
+                      <Card
+                        key={`${message.id}-suggestions-loading-${index}`}
+                        className="p-3 bg-muted w-fit"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                          <span className="text-sm">
+                            Generando sugerencias inteligentes...
+                          </span>
+                        </div>
+                      </Card>
+                    );
+                  }
+                  if (part.state === "output-error") {
+                    return (
+                      <Card
+                        key={`${message.id}-suggestions-error-${index}`}
                         className="p-3 bg-destructive/10 border-destructive w-fit"
                       >
                         <p className="text-destructive text-sm">
