@@ -28,8 +28,8 @@ import {
   type HistoryIconHandle,
 } from "@/components/sidebar/icons/icon-history";
 import {
-  IdCardIcon,
-  type IdCardIconHandle,
+  UserIcon,
+  type UserIconHandle,
 } from "@/components/sidebar/icons/icon-profile";
 import {
   SidebarGroup,
@@ -44,7 +44,7 @@ export function NavMain() {
   const historyIconRef = useRef<HistoryIconHandle>(null);
   const messageIconRef = useRef<MessageCircleIconHandle>(null);
   const analyticsIconRef = useRef<ChartSplineIconHandle>(null);
-  const profileIconRef = useRef<IdCardIconHandle>(null);
+  const profileIconRef = useRef<UserIconHandle>(null);
 
   return (
     <SidebarGroup>
@@ -149,7 +149,7 @@ export function NavMain() {
               onMouseEnter={() => profileIconRef.current?.startAnimation()}
               onMouseLeave={() => profileIconRef.current?.stopAnimation()}
             >
-              <IdCardIcon ref={profileIconRef} size={16} className="w-4 h-4" />
+              <UserIcon ref={profileIconRef} size={16} className="w-4 h-4" />
               <span>Profile</span>
             </Link>
           </SidebarMenuButton>
