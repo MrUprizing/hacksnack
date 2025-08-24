@@ -27,54 +27,54 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const chartData = [
-  { month: "January", desktop: 342, mobile: 245, tablet: 123 },
-  { month: "February", desktop: 876, mobile: 654, tablet: 234 },
-  { month: "March", desktop: 512, mobile: 387, tablet: 156 },
-  { month: "April", desktop: 629, mobile: 521, tablet: 267 },
-  { month: "May", desktop: 458, mobile: 412, tablet: 213 },
-  { month: "June", desktop: 781, mobile: 598, tablet: 321 },
-  { month: "July", desktop: 394, mobile: 312, tablet: 145 },
-  { month: "August", desktop: 925, mobile: 743, tablet: 150 },
-  { month: "September", desktop: 647, mobile: 489, tablet: 212 },
-  { month: "October", desktop: 532, mobile: 476, tablet: 187 },
-  { month: "November", desktop: 803, mobile: 687, tablet: 298 },
-  { month: "December", desktop: 271, mobile: 198, tablet: 123 },
-];
+// Recibe los datos como prop
+type DailyMacro = {
+  date: string;
+  protein: number;
+  carbohydrates: number;
+  fat: number;
+};
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  protein: {
+    label: "Proteins",
     color: "var(--chart-1)",
   },
-  mobile: {
-    label: "Mobile",
+  carbohydrates: {
+    label: "Carbs",
     color: "var(--chart-2)",
   },
-  tablet: {
-    label: "Tablet",
+  fat: {
+    label: "Fats",
     color: "var(--chart-3)",
   },
 } satisfies ChartConfig;
 
 type ActiveProperty = keyof typeof chartConfig | "all";
 
-export function GlowingBarChart() {
+export function GlowingBarChart({ data = [] }: { data?: DailyMacro[] }) {
   const [activeProperty, setActiveProperty] =
     React.useState<ActiveProperty>("all");
+
+  const chartData = data.map((row) => ({
+    day: row.date.slice(5),
+    protein: row.protein ?? 0,
+    carbohydrates: row.carbohydrates ?? 0,
+    fat: row.fat ?? 0,
+  }));
 
   return (
     <Card>
       <CardHeader>
         <div className="flex flex-row justify-between">
           <CardTitle>
-            Bar Chart
+            Macronutrients
             <Badge
               variant="outline"
               className="text-green-500 bg-green-500/10 border-none ml-2"
             >
               <TrendingUp className="h-4 w-4" />
-              <span>5.2%</span>
+              <span>Últimos días</span>
             </Badge>
           </CardTitle>
           <Select
@@ -88,34 +88,34 @@ export function GlowingBarChart() {
             </SelectTrigger>
             <SelectContent align="end">
               <SelectGroup>
-                <SelectLabel>Properties</SelectLabel>
+                <SelectLabel>Macronutrientes</SelectLabel>
                 <SelectItem className="text-xs" value="all">
-                  All
+                  Todos
                 </SelectItem>
-                <SelectItem className="text-xs" value="desktop">
-                  Proteins
+                <SelectItem className="text-xs" value="protein">
+                  Proteínas
                 </SelectItem>
-                <SelectItem className="text-xs" value="mobile">
-                  Carbs
+                <SelectItem className="text-xs" value="carbohydrates">
+                  Carbohidratos
                 </SelectItem>
-                <SelectItem className="text-xs" value="tablet">
-                  Fats
+                <SelectItem className="text-xs" value="fat">
+                  Grasas
                 </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
-        <CardDescription>January - June 2025</CardDescription>
+        <CardDescription>Consumo diario</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
             <XAxis
-              dataKey="month"
+              dataKey="day"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value}
             />
 
             <ChartTooltip
@@ -126,19 +126,19 @@ export function GlowingBarChart() {
               stackId="a"
               barSize={8}
               className="dark:text-[#1A1A1C] text-[#E4E4E7]"
-              dataKey="mobile"
-              fill="var(--color-mobile)"
+              dataKey="protein"
+              fill="var(--color-protein)"
               radius={4}
               shape={<CustomGradientBar activeProperty={activeProperty} />}
-              background={{ fill: "currentColor", radius: 4 }} // Only Top Bar will have background else it will give render errors
+              background={{ fill: "currentColor", radius: 4 }}
               overflow="visible"
             />
             <Bar
               stackId="a"
               barSize={8}
               shape={<CustomGradientBar activeProperty={activeProperty} />}
-              dataKey="tablet"
-              fill="var(--color-tablet)"
+              dataKey="carbohydrates"
+              fill="var(--color-carbohydrates)"
               radius={4}
               overflow="visible"
             />
@@ -146,8 +146,8 @@ export function GlowingBarChart() {
               stackId="a"
               barSize={8}
               shape={<CustomGradientBar activeProperty={activeProperty} />}
-              dataKey="desktop"
-              fill="var(--color-desktop)"
+              dataKey="fat"
+              fill="var(--color-fat)"
               radius={4}
               overflow="visible"
             />

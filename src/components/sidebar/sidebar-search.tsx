@@ -1,8 +1,15 @@
 "use client";
 
-import { GitBranch, LayoutPanelTop, SearchIcon, Zap } from "lucide-react";
+import {
+  LayoutPanelTop,
+  MessageCircle,
+  History,
+  Route,
+  User,
+  SearchIcon,
+} from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import * as React from "react";
 import {
   CommandDialog,
@@ -17,7 +24,7 @@ import { SidebarMenuButton } from "../ui/sidebar";
 
 export default function SearchSidebar() {
   const [open, setOpen] = React.useState(false);
-  const params = useParams<{ slug: string }>();
+  const pathname = usePathname();
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -30,6 +37,39 @@ export default function SearchSidebar() {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
+
+  // Lista de rutas principales igual que en NavMain
+  const navLinks = [
+    {
+      href: "/dashboard",
+      label: "Dashboard",
+      icon: (
+        <LayoutPanelTop size={16} className="opacity-60" aria-hidden="true" />
+      ),
+    },
+    {
+      href: "/chat",
+      label: "Chat",
+      icon: (
+        <MessageCircle size={16} className="opacity-60" aria-hidden="true" />
+      ),
+    },
+    {
+      href: "/history",
+      label: "History",
+      icon: <History size={16} className="opacity-60" aria-hidden="true" />,
+    },
+    {
+      href: "/goals",
+      label: "Goals",
+      icon: <Route size={16} className="opacity-60" aria-hidden="true" />,
+    },
+    {
+      href: "/profile",
+      label: "Profile",
+      icon: <User size={16} className="opacity-60" aria-hidden="true" />,
+    },
+  ];
 
   return (
     <>
@@ -62,32 +102,14 @@ export default function SearchSidebar() {
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandSeparator />
           <CommandGroup heading="Navigation">
-            <CommandItem asChild>
-              <Link href={`/team/${params.slug}`} prefetch={true}>
-                <LayoutPanelTop
-                  size={16}
-                  className="opacity-60"
-                  aria-hidden="true"
-                />
-                <span>Go to Dashboard</span>
-              </Link>
-            </CommandItem>
-            <CommandItem asChild>
-              <Link href={`/team/${params.slug}/automation`} prefetch={true}>
-                <Zap size={16} className="opacity-60" aria-hidden="true" />
-                <span>Go to AI Automation</span>
-              </Link>
-            </CommandItem>
-            <CommandItem asChild>
-              <Link href={`/team/${params.slug}/repositories`} prefetch={true}>
-                <GitBranch
-                  size={16}
-                  className="opacity-60"
-                  aria-hidden="true"
-                />
-                <span>Go to Repositories</span>
-              </Link>
-            </CommandItem>
+            {navLinks.map((link) => (
+              <CommandItem asChild key={link.href}>
+                <Link href={link.href} prefetch={true}>
+                  {link.icon}
+                  <span>{link.label}</span>
+                </Link>
+              </CommandItem>
+            ))}
           </CommandGroup>
         </CommandList>
       </CommandDialog>
