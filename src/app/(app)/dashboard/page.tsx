@@ -1,3 +1,6 @@
+import { SectionCards } from "@/components/dashboard/section-cards";
+import { GlowingBarChart } from "@/components/dashboard/section-chart";
+import HistoricalMeals from "@/components/dashboard/section-history";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,19 +22,32 @@ export default function Page() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+              <BreadcrumbPage>Dashboard</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-          <div className="bg-card aspect-video rounded-xl border" />
-          <div className="bg-card aspect-video rounded-xl border" />
-          <div className="bg-card aspect-video rounded-xl border" />
+      <main className="mx-6 mb-6">
+        <h2 className="pb-4 pt-2 text-xl sm:text-xl md:text-3xl lg:text-5xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-neutral-950 dark:from-neutral-100 to-neutral-400 dark:to-neutral-500 inset-x-0">
+          How are you Nicolas Vargas
+        </h2>
+        <Separator className="mb-6" />
+        {/* Cards centradas */}
+        <div className="w-full flex justify-center">
+          <SectionCards />
         </div>
-        <div className="bg-card min-h-[100vh] flex-1 rounded-xl md:min-h-min border" />
-      </div>
+        {/* Responsive: stack en mobile, fila en md+ */}
+        <div className="pt-6 w-full flex flex-col md:flex-row gap-6 items-stretch">
+          {/* Chart con ancho fijo */}
+          <div className="w-full md:w-[500px] flex-shrink-0">
+            <GlowingBarChart />
+          </div>
+          {/* Historical ocupa el espacio restante */}
+          <div className="w-full md:flex-1 max-h">
+            <HistoricalMeals />
+          </div>
+        </div>
+      </main>
     </>
   );
 }

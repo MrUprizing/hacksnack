@@ -12,6 +12,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef } from "react";
 import {
+  ChartSplineIcon,
+  type ChartSplineIconHandle,
+} from "@/components/sidebar/icons/icon-analytics";
+import {
+  MessageCircleIcon,
+  type MessageCircleIconHandle,
+} from "@/components/sidebar/icons/icon-chat";
+import {
   LayoutPanelTopIcon,
   type LayoutPanelTopIconHandle,
 } from "@/components/sidebar/icons/icon-dashboard";
@@ -20,13 +28,9 @@ import {
   type HistoryIconHandle,
 } from "@/components/sidebar/icons/icon-history";
 import {
-  MessageCircleIcon,
-  type MessageCircleIconHandle,
-} from "@/components/sidebar/icons/icon-chat";
-import {
-  ChartSplineIcon,
-  type ChartSplineIconHandle,
-} from "@/components/sidebar/icons/icon-analytics";
+  IdCardIcon,
+  type IdCardIconHandle,
+} from "@/components/sidebar/icons/icon-profile";
 import {
   SidebarGroup,
   SidebarMenu,
@@ -40,6 +44,7 @@ export function NavMain() {
   const historyIconRef = useRef<HistoryIconHandle>(null);
   const messageIconRef = useRef<MessageCircleIconHandle>(null);
   const analyticsIconRef = useRef<ChartSplineIconHandle>(null);
+  const profileIconRef = useRef<IdCardIconHandle>(null);
 
   return (
     <SidebarGroup>
@@ -141,8 +146,10 @@ export function NavMain() {
             <Link
               href="/profile"
               className={`flex items-center gap-2 link${pathname === "/profile" ? " bg-sidebar-accent" : ""}`}
+              onMouseEnter={() => profileIconRef.current?.startAnimation()}
+              onMouseLeave={() => profileIconRef.current?.stopAnimation()}
             >
-              <User className="w-4 h-4" />
+              <IdCardIcon ref={profileIconRef} size={16} className="w-4 h-4" />
               <span>Profile</span>
             </Link>
           </SidebarMenuButton>
