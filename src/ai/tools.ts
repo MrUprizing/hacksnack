@@ -286,7 +286,6 @@ export const renderJsxTool = createTool({
       .describe("The data needed to render the component, as a JSON object."),
   }),
   execute: async ({ description, data }) => {
-    // Llama a la función generativa que produce el JSX
     const { text: jsx } = await generateJsxFromDescription(description, data);
     return { jsx };
   },
