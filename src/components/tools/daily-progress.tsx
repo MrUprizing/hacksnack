@@ -1,6 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
 
 type DailyProgressBarProps = {
   calories: number;
@@ -43,14 +43,6 @@ export function DailyProgressBar({
         </div>
         <Progress value={proteinPercent} className="h-2 bg-background" />
       </div>
-      <Button
-        variant="outline"
-        className="w-full"
-        onClick={onAddFood}
-        type="button"
-      >
-        + Agregar comida
-      </Button>
     </Card>
   );
 }

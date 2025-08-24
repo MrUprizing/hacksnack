@@ -1,6 +1,6 @@
+import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { foodEntry } from "../schema";
-import { eq, desc } from "drizzle-orm";
 
 export async function getFoodEntriesByUserId(userId: string) {
   const result = await db

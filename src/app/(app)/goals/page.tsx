@@ -1,14 +1,15 @@
 "use client";
 
+import { Beef, Droplets, Info, Target, Wheat, Zap } from "lucide-react";
 import { useState } from "react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -16,9 +17,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -26,9 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { Target, Zap, Beef, Wheat, Droplets, Info } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   Tooltip,
   TooltipContent,
@@ -185,7 +185,7 @@ export default function NutritionGoalsPage() {
                     onChange={(e) =>
                       setGoals({
                         ...goals,
-                        caloriesGoal: Number.parseInt(e.target.value) || 0,
+                        caloriesGoal: Number.parseInt(e.target.value, 10) || 0,
                       })
                     }
                     className="text-center text-lg font-semibold"

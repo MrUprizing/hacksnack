@@ -1,22 +1,13 @@
 import { tool as createTool } from "ai";
 import { headers } from "next/headers";
 import { z } from "zod";
+import { analyzeFoodImage } from "@/ai/vision";
 import { addFoodEntry } from "@/db/mutations/food-entry";
 import { createGoal, updateGoal } from "@/db/mutations/goals";
 import { getDailyProgress } from "@/db/queries/daily-progress";
 import { getGoalByUserId } from "@/db/queries/goals";
 import { auth } from "@/lib/auth";
-
-export const weatherTool = createTool({
-  description: "Display the weather for a location",
-  inputSchema: z.object({
-    location: z.string().describe("The location to get the weather for"),
-  }),
-  execute: async ({ location }) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    return { weather: "Sunny", temperature: 75, location };
-  },
-});
+import { generateJsxFromDescription } from "./v0";
 
 export const logFoodText = createTool({
   description: "Save a food entry to the database when the user eats that food",
@@ -56,7 +47,7 @@ export const logFoodText = createTool({
           fat,
         },
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         message: `❌ Error al registrar la comida`,
@@ -87,8 +78,6 @@ export const foodComparisonTool = createTool({
     }),
   }),
   execute: async ({ food1, food2 }) => {
-    // Simular tiempo de procesamiento
-    await new Promise((resolve) => setTimeout(resolve, 1500));
     return { food1, food2 };
   },
 });
@@ -239,8 +228,71 @@ export const smartSuggestionsTool = createTool({
   },
 });
 
+export const logFoodImage = createTool({
+  description:
+    "Save a food entry to the database by analyzing a food image. Only provide the public image URL as input. The tool will analyze the image and extract nutrition data automatically. ",
+  inputSchema: z.object({
+    imageUrl: z.string().describe("Public URL of the uploaded food image"),
+  }),
+  execute: async ({ imageUrl }) => {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    const userId = session?.user?.id || "anonymous";
+    try {
+      // Analiza la imagen con IA y obtiene el JSON nutricional
+      const nutrition = await analyzeFoodImage(imageUrl);
+
+      // nutrition debe tener: description, calories, protein, carbohydrates, fat, fiber, sugar, sodium, mealType
+      const entry = await addFoodEntry({
+        userId,
+        imageUrl,
+        description: nutrition.description,
+        calories: nutrition.calories,
+        protein: nutrition.protein,
+        carbohydrates: nutrition.carbohydrates,
+        fat: nutrition.fat,
+        fiber: nutrition.fiber,
+        sugar: nutrition.sugar,
+        sodium: nutrition.sodium,
+        mealType: nutrition.mealType ?? undefined,
+      });
+
+      return {
+        success: true,
+        entry,
+        message: `✅ Food entry saved successfully: ${nutrition.description}`,
+        nutrition,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `❌ Error saving food entry: ${error.message}`,
+      };
+    }
+  },
+});
+
+export const renderJsxTool = createTool({
+  description: `This tool receives a plain English description of the UI component to generate, along with the data to display. It uses an LLM to generate the JSX code dynamically. Do not return JSX directly, just describe what you want to render and provide the data.`,
+  inputSchema: z.object({
+    description: z
+      .string()
+      .describe(
+        "A plain English description of what to render, including style instructions.",
+      ),
+    data: z
+      .any()
+      .describe("The data needed to render the component, as a JSON object."),
+  }),
+  execute: async ({ description, data }) => {
+    // Llama a la función generativa que produce el JSX
+    const { text: jsx } = await generateJsxFromDescription(description, data);
+    return { jsx };
+  },
+});
+
 export const tools = {
-  displayWeather: weatherTool,
   compareFoods: foodComparisonTool,
   logFood: logFoodText,
   createGoal: createGoalTool,
@@ -248,4 +300,6 @@ export const tools = {
   viewGoal: viewGoalTool,
   dailyProgress: dailyProgressTool,
   smartSuggestions: smartSuggestionsTool,
+  logFoodImage: logFoodImage,
+  renderJsx: renderJsxTool,
 };

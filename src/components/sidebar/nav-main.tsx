@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles, Target } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef } from "react";
@@ -17,6 +17,10 @@ import {
   type LayoutPanelTopIconHandle,
 } from "@/components/sidebar/icons/icon-dashboard";
 import {
+  RouteIcon,
+  type RouteIconHandle,
+} from "@/components/sidebar/icons/icon-goals";
+import {
   HistoryIcon,
   type HistoryIconHandle,
 } from "@/components/sidebar/icons/icon-history";
@@ -24,10 +28,6 @@ import {
   UserIcon,
   type UserIconHandle,
 } from "@/components/sidebar/icons/icon-profile";
-import {
-  RouteIcon,
-  type RouteIconHandle,
-} from "@/components/sidebar/icons/icon-goals";
 import {
   SidebarGroup,
   SidebarMenu,
@@ -98,24 +98,6 @@ export function NavMain() {
         </SidebarMenuItem>
 
         <SidebarMenuItem>
-          <SidebarMenuButton asChild tooltip="Analytics">
-            <Link
-              href="/analytics"
-              className={`flex items-center gap-2 link${pathname === "/analytics" ? " bg-sidebar-accent" : ""}`}
-              onMouseEnter={() => analyticsIconRef.current?.startAnimation()}
-              onMouseLeave={() => analyticsIconRef.current?.stopAnimation()}
-            >
-              <ChartSplineIcon
-                ref={analyticsIconRef}
-                size={16}
-                className="w-4 h-4"
-              />
-              <span>Analytics</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-
-        <SidebarMenuItem>
           <SidebarMenuButton asChild tooltip="Goals">
             <Link
               href="/goals"
@@ -125,18 +107,6 @@ export function NavMain() {
             >
               <RouteIcon ref={goalsIconRef} size={16} className="w-4 h-4" />
               <span>Goals</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-
-        <SidebarMenuItem>
-          <SidebarMenuButton asChild tooltip="Insights">
-            <Link
-              href="/insights"
-              className={`flex items-center gap-2 link${pathname === "/insights" ? " bg-sidebar-accent" : ""}`}
-            >
-              <Sparkles className="w-4 h-4" />
-              <span>Insights</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>

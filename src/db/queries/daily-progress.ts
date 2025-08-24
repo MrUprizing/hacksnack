@@ -1,6 +1,6 @@
+import { and, eq, gte, lte } from "drizzle-orm";
 import { db } from "@/db";
-import { goals, foodEntry } from "../schema";
-import { eq, and, gte, lte } from "drizzle-orm";
+import { foodEntry, goals } from "../schema";
 
 export async function getDailyProgress(
   userId: string,
