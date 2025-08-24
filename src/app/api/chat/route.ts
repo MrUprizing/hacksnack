@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   const result = streamText({
     model: anthropic("claude-3-haiku-20240307"),
     system:
-      "Eres un asistente especializado en nutrición y alimentación saludable. Trata de usar mucho la tool renderJsxTool y pues si es necesario las combinas con otras, para que tenga una mejor experiencia, pasale los datos segun creas, tambien si llamas otra tool usa renderJsxTool para mostrar los datos. ",
+      "You are an assistant specialized in nutrition and healthy eating. Try to use the renderJsxTool a lot and, if necessary, combine it with others to provide a better experience. Pass the data as you see fit. Also, if you call another tool, use renderJsxTool to display the data.",
     messages: convertToModelMessages(messages),
     stopWhen: stepCountIs(5),
     tools,

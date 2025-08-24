@@ -15,6 +15,7 @@ Data (as JSON):
 ${JSON.stringify(data, null, 2)}
 
 Instructions:
+- Dont use JavaScript, functions, objects or variables, only HTML and inline styles.
 - Only return the JSX code, nothing else.
 - Use inline styles (style={{ ... }}) for all styling. Do NOT use Tailwind or external CSS.
 - The component must be visually appealing and match the description.
