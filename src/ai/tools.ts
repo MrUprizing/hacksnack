@@ -1,4 +1,5 @@
 import { tool as createTool } from "ai";
+import { getFoodEntriesByUserId } from "@/db/queries/food-entry";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { analyzeFoodImage } from "@/ai/vision";
@@ -291,6 +292,30 @@ export const renderJsxTool = createTool({
   },
 });
 
+export const getAllFoodEntriesTool = createTool({
+  description: "Get all food entries for the current authenticated user",
+  inputSchema: z.object({}), // No input necesario
+  execute: async () => {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    const userId = session?.user?.id || "anonymous";
+    try {
+      const entries = await getFoodEntriesByUserId(userId);
+      return {
+        success: true,
+        entries,
+        message: `✅ Retrieved all food entries for user.`,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `❌ Error retrieving food entries: ${error.message}`,
+      };
+    }
+  },
+});
+
 export const tools = {
   compareFoods: foodComparisonTool,
   logFood: logFoodText,
@@ -300,5 +325,6 @@ export const tools = {
   dailyProgress: dailyProgressTool,
   smartSuggestions: smartSuggestionsTool,
   logFoodImage: logFoodImage,
+  getAllFoodEntries: getAllFoodEntriesTool,
   renderJsx: renderJsxTool,
 };
